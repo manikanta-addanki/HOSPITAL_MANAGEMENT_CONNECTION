@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patients - Hospital Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298); /* deep blue gradient */
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background: rgba(255,255,255,0.97);
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    color: #243b53;           /* dark slate text */
+    font-size: 2em;
+}
+
+.btn {
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #00b4d8, #0077b6); /* teal → blue */
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 119, 182, 0.45);
+}
+
+.table-container {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+th {
+    background: linear-gradient(45deg, #1e88e5, #1565c0); /* blue header */
+    color: white;
+    font-weight: 600;
+}
+
+tr:hover {
+    background: #f2f7ff;      /* light blue hover */
+}
+
+.action-btn {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-view {
+    background: #007bff;
+    color: white;
+}
+
+.btn-edit {
+    background: #ffb703;      /* softer amber */
+    color: #333;
+}
+
+.btn-delete {
+    background: #e63946;      /* muted red */
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px;
+    color: #555;
+    font-size: 1.2em;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Patients Management</h1>
+            <a href="{% url 'patient_create' %}" class="btn">➕ Add New Patient</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding:15px;margin-bottom:15px;background:#d4edda;border:1px solid #c3e6cb;border-radius:10px;color:#155724;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="table-container">
+            {% if patients %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Gender</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr>
+                            <td>{{ patient.id }}</td>
+                            <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                            <td>{{ patient.phone }}</td>
+                            <td>{{ patient.get_gender_display }}</td>
+                            <td>{{ patient.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'patient_detail' patient.id %}" class="action-btn btn-view">View</a>
+                                <a href="{% url 'patient_update' patient.id %}" class="action-btn btn-edit">Edit</a>
+                                <a href="{% url 'patient_delete' patient.id %}" class="action-btn btn-delete">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty">
+                    <h3>No patients found</h3>
+                    <a href="{% url 'patient_create' %}" class="btn">Add First Patient</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="text-align:center; margin-top:30px;">
+            <a href="/dashboard/" style="color:white;text-decoration:none;font-weight:600;">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

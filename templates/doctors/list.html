@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctors - Hospital Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #4facfe, #00f2fe); min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { color: #333; font-size: 2em; }
+        .btn { padding: 12px 25px; background: linear-gradient(45deg, #4facfe, #00f2fe); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        .table-container { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 35px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: linear-gradient(45deg, #4facfe, #00f2fe); color: white; font-weight: 600; }
+        tr:hover { background: #f4fbff; }
+        .action-btn { padding: 8px 15px; margin: 0 5px; border-radius: 20px; font-size: 0.9em; text-decoration: none; transition: all 0.3s; }
+        .btn-edit { background: #f39c12; color: white; }
+        .btn-delete { background: #e74c3c; color: white; }
+        .action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .empty { text-align: center; padding: 50px; color: #555; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🩺 Doctors Management</h1>
+            <a href="{% url 'doctor_create' %}" class="btn">➕ Add Doctor</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding:15px;margin-bottom:15px;background:#d4edda;border:1px solid #c3e6cb;border-radius:10px;color:#155724;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="table-container">
+            {% if doctors %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Specialty</th>
+                            <th>Phone</th>
+                            <th>Experience</th>
+                            <th>Fee</th>
+                            <th>Availability</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doctor in doctors %}
+                        <tr>
+                            <td>{{ doctor.id }}</td>
+                            <td>Dr. {{ doctor.first_name }} {{ doctor.last_name }}</td>
+                            <td>{{ doctor.get_specialty_display }}</td>
+                            <td>{{ doctor.phone }}</td>
+                            <td>{{ doctor.experience_years }} yrs</td>
+                            <td>₹{{ doctor.consultation_fee }}</td>
+                            <td>{% if doctor.is_available %}✅{% else %}❌{% endif %}</td>
+                            <td>
+                                <a href="{% url 'doctor_update' doctor.id %}" class="action-btn btn-edit">Edit</a>
+                                <a href="{% url 'doctor_delete' doctor.id %}" class="action-btn btn-delete">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty">
+                    <h3>No doctors found</h3>
+                    <a href="{% url 'doctor_create' %}" class="btn">Add First Doctor</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="text-align:center;margin-top:30px;">
+            <a href="/dashboard/" style="color:white;font-weight:600;text-decoration:none;">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

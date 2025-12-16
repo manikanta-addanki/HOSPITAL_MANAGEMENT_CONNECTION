@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Detail - Hospital Management</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.97);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #243b53;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #4a5568;
+            font-size: 1em;
+        }
+
+        .patient-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px; /* gap between columns and rows */
+        }
+
+        .info-group {
+            margin-bottom: 10px; /* smaller vertical gap inside each item */
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 1.02em;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            background: #f7fafc;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border-left: 4px solid #3182ce;
+            font-size: 1.02em;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;          /* gap between buttons */
+            margin-top: 18px;   /* space above buttons */
+        }
+
+        .btn {
+            padding: 10px 26px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3182ce, #2b6cb0);
+            color: #ffffff;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f6ad55, #dd6b20);
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #e53e3e, #c53030);
+            color: #ffffff;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.02em;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👤 Patient Details</h1>
+            <p>{{ patient.first_name }} {{ patient.last_name }}</p>
+        </div>
+        
+        <div class="patient-card">
+            <div class="patient-info">
+                <div class="info-group">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ patient.phone }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Gender:</span>
+                    <span class="info-value">{{ patient.get_gender_display }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Date of Birth:</span>
+                    <span class="info-value">{{ patient.date_of_birth }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Emergency Contact:</span>
+                    <span class="info-value">{{ patient.emergency_contact }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Address:</span>
+                    <span class="info-value">{{ patient.address }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Created:</span>
+                    <span class="info-value">{{ patient.created_at|date:"M d, Y H:i" }}</span>
+                </div>
+                {% if patient.medical_history %}
+                <div class="info-group">
+                    <span class="info-label">Medical History:</span>
+                    <span class="info-value">{{ patient.medical_history }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <a href="{% url 'patient_update' patient.id %}" class="btn btn-warning">✏️ Edit</a>
+            <a href="{% url 'patient_delete' patient.id %}" class="btn btn-danger">🗑️ Delete</a>
+            <a href="{% url 'patient_list' %}" class="btn btn-primary">👥 Back to List</a>
+        </div>
+        
+        <a href="/dashboard/" class="back-link">← Dashboard</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Doctor - Hospital Management</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #4facfe, #00f2fe); min-height: 100vh; }
+        .container { max-width: 500px; margin: 100px auto; background: rgba(255,255,255,0.95); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); padding: 40px; text-align: center; }
+        h2 { color:#e74c3c; margin-bottom: 20px; }
+        p { margin-bottom: 30px; font-size: 1.1em; color:#555; }
+        form { display:inline-block; }
+        .btn { padding:12px 25px; border:none; border-radius:25px; font-size:1em; font-weight:600; cursor:pointer; margin:5px; transition:0.3s; }
+        .btn-delete { background: linear-gradient(45deg, #e74c3c, #c0392b); color:white; }
+        .btn-cancel { background: linear-gradient(45deg, #6c757d, #95a5a6); color:white; text-decoration:none; padding:10px 25px; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>⚠️ Confirm Delete</h2>
+        <p>Are you sure you want to delete <strong>Dr. {{ doctor.first_name }} {{ doctor.last_name }}</strong>?</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-delete">Yes, Delete</button>
+        </form>
+        <a href="{% url 'doctor_list' %}" class="btn-cancel">Cancel</a>
+    </div>
+</body>
+</html>

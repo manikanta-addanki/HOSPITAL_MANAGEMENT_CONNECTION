@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billing - Hospital Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #00b09b, #96c93d); min-height: 100vh; }
+        .container { max-width: 1200px; margin: auto; padding: 20px; }
+        .header { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 2em; color: #333; }
+        .btn { padding: 12px 25px; background: linear-gradient(45deg, #00b09b, #96c93d); color: white; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+        .table-container { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: linear-gradient(45deg, #00b09b, #96c93d); color: white; font-weight: 600; }
+        tr:hover { background: #f3fff3; }
+        .empty { text-align: center; padding: 50px; color: #555; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💵 Billing Management</h1>
+            <a href="{% url 'billing_create' %}" class="btn">➕ New Bill</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding:15px;background:#d4edda;border-radius:10px;margin-bottom:15px;color:#155724;border:1px solid #c3e6cb;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="table-container">
+            {% if billings %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient</th>
+                            <th>Appointment</th>
+                            <th>Total Amount</th>
+                            <th>Paid</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bill in billings %}
+                        <tr>
+                            <td>{{ bill.id }}</td>
+                            <td>{{ bill.patient }}</td>
+                            <td>{% if bill.appointment %}{{ bill.appointment.id }}{% else %}-{% endif %}</td>
+                            <td>₹{{ bill.total_amount }}</td>
+                            <td>₹{{ bill.paid_amount }}</td>
+                            <td>{{ bill.get_payment_status_display }}</td>
+                            <td>{{ bill.billing_date|date:"M d, Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty">
+                    <h3>No bills recorded</h3>
+                    <a href="{% url 'billing_create' %}" class="btn">Add First Bill</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="text-align:center;margin-top:30px;">
+            <a href="/dashboard/" style="color:white;text-decoration:none;font-weight:600;">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

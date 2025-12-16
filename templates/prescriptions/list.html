@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prescriptions - Hospital Management</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI', sans-serif; background:linear-gradient(135deg, #654ea3, #eaafc8); min-height:100vh; }
+        .container { max-width:1200px; margin:auto; padding:20px; }
+        .header { background:rgba(255,255,255,0.95); border-radius:20px; padding:25px; box-shadow:0 15px 35px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
+        .header h1 { color:#333; font-size:2em; }
+        .btn { background:linear-gradient(45deg, #654ea3, #eaafc8); padding:12px 25px; border-radius:25px; color:white; text-decoration:none; font-weight:600; transition:0.3s; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,0.25); }
+        .table-container { background:white; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.1); overflow:hidden; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:15px; border-bottom:1px solid #eee; text-align:left; }
+        th { background:linear-gradient(45deg, #654ea3, #eaafc8); color:white; font-weight:600; }
+        tr:hover { background:#f9f7ff; }
+        .empty { text-align:center; padding:50px; color:#555; font-size:1.1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧾 Prescriptions Management</h1>
+            <a href="{% url 'prescription_create' %}" class="btn">➕ Add Prescription</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding:15px;background:#d4edda;border-radius:10px;margin-bottom:15px;color:#155724;border:1px solid #c3e6cb;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="table-container">
+            {% if prescriptions %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Medicines</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in prescriptions %}
+                        <tr>
+                            <td>{{ p.id }}</td>
+                            <td>{{ p.appointment.patient.first_name }} {{ p.appointment.patient.last_name }}</td>
+                            <td>Dr. {{ p.prescribed_by.first_name }} {{ p.prescribed_by.last_name }}</td>
+                            <td>{{ p.prescribed_date|date:"M d, Y H:i" }}</td>
+                            <td>
+                                {% for med in p.medicines.all %}
+                                    {{ med.name }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    -
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty">
+                    <h3>No prescriptions recorded</h3>
+                    <a href="{% url 'prescription_create' %}" class="btn">Add First Prescription</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="text-align:center;margin-top:30px;">
+            <a href="/dashboard/" style="color:white;text-decoration:none;font-weight:600;">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

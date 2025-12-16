@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicines - Hospital Management</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI', sans-serif; background:linear-gradient(135deg, #8360c3, #2ebf91); min-height:100vh; }
+        .container { max-width:1200px; margin:auto; padding:20px; }
+        .header { background:rgba(255,255,255,0.95); border-radius:20px; padding:25px; box-shadow:0 15px 35px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
+        .header h1 { color:#333; font-size:2em; }
+        .btn { background:linear-gradient(45deg, #8360c3, #2ebf91); padding:12px 25px; border-radius:25px; color:white; text-decoration:none; font-weight:600; transition:0.3s; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+        .table-container { background:white; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.1); overflow:hidden; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:15px; border-bottom:1px solid #eee; text-align:left; }
+        th { background:linear-gradient(45deg, #8360c3, #2ebf91); color:white; font-weight:600; }
+        tr:hover { background:#f4f9ff; }
+        .empty { text-align:center; padding:50px; color:#555; font-size:1.1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💊 Medicines Inventory</h1>
+            <a href="{% url 'medicine_create' %}" class="btn">➕ Add Medicine</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding:15px;margin-bottom:15px;background:#d4edda;border:1px solid #c3e6cb;border-radius:10px;color:#155724;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="table-container">
+            {% if medicines %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Generic Name</th>
+                            <th>Dosage</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Expiry</th>
+                            <th>Manufacturer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for med in medicines %}
+                        <tr>
+                            <td>{{ med.id }}</td>
+                            <td>{{ med.name }}</td>
+                            <td>{{ med.generic_name }}</td>
+                            <td>{{ med.dosage }}</td>
+                            <td>₹{{ med.price_per_unit }}</td>
+                            <td>{{ med.stock_quantity }}</td>
+                            <td>{{ med.expiry_date|date:"M d, Y" }}</td>
+                            <td>{{ med.manufacturer }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty">
+                    <h3>No medicines found</h3>
+                    <a href="{% url 'medicine_create' %}" class="btn">Add First Medicine</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="text-align:center;margin-top:30px;">
+            <a href="/dashboard/" style="color:white;text-decoration:none;font-weight:600;">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

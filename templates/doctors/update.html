@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Doctor - Hospital Management</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #4facfe, #00f2fe); min-height: 100vh; }
+        .container { max-width: 800px; margin: 50px auto; background: rgba(255,255,255,0.95); padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        h1 { text-align:center; color:#333; margin-bottom:30px; }
+        form { display:flex; flex-direction:column; gap:15px; }
+        label { font-weight:600; color:#555; }
+        input, select, textarea { padding:10px; border:1px solid #ccc; border-radius:10px; }
+        .btn { padding:12px; background: linear-gradient(45deg, #f39c12, #e67e22); color:white; border:none; border-radius:25px; font-weight:600; cursor:pointer; transition:0.3s; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,0.2); }
+        a { display:block; text-align:center; margin-top:20px; text-decoration:none; color:#007bff; font-weight:600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✏️ Update Doctor Information</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Update Doctor</button>
+        </form>
+        <a href="{% url 'doctor_list' %}">← Back to Doctors List</a>
+    </div>
+</body>
+</html>
