@@ -4,6 +4,131 @@ from django.forms import model_to_dict
 from app1.models import   Patient, Doctor, Appointment, Billing, LabReport, Staff, Bed, Medicine, Prescription, PrescriptionMedicine
 from datetime import date
 from app1.forms import PatientForm, DoctorForm, AppointmentForm, BillingForm,LabReportForm, StaffForm, BedForm, MedicineForm,PrescriptionForm, PrescriptionMedicineForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
+
+
+
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Logged in successfully!")
+            return redirect("dashboard")   # adjust to your dashboard url name
+        else:
+            messages.error(request, "Invalid username or password.")
+    return render(request, "auth/login.html")
+
+
+
+def user_register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # auto login after register
+            messages.success(request, "Account created successfully!")
+            return redirect("dashboard")
+    else:
+        form = UserCreationForm()
+    return render(request, "auth/register.html", {"form": form})
+
+
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    messages.success(request, "Logged out successfully!")
+    return redirect("user_login")   # adjust to your login url name
+
+
+
+@login_required
+def patient_delete_auth(request, id):
+    patient = get_object_or_404(Patient, id=id)
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None and user == request.user:
+            # User verified → delete patient
+            patient.delete()
+            messages.success(request, "Patient deleted successfully!")
+            return redirect("patient_list")
+        else:
+            messages.error(request, "Invalid username or password. Deletion cancelled.")
+
+    return render(
+        request,
+        "auth/delete_verify.html",
+        {
+            "object": patient,
+            "cancel_url": reverse("patient_list"),
+        },
+    )
+
+
+@login_required
+def doctor_delete_auth(request, id):
+    doctor = get_object_or_404(Doctor, id=id)
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None and user == request.user:
+            doctor.delete()
+            messages.success(request, "Doctor deleted successfully after verification.")
+            return redirect("doctor_list")
+        else:
+            messages.error(request, "Invalid username or password. Deletion cancelled.")
+
+    return render(
+        request,
+        "auth/delete_doctor.html",
+        {
+            "object": doctor,
+            "cancel_url": reverse("doctor_list"),
+        },
+    )
+
+
+@login_required
+def appointment_delete_auth(request, id):
+    appointment = get_object_or_404(Appointment, id=id)
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            appointment.delete()
+            messages.success(request, "Appointment deleted successfully after verification.")
+            return redirect("appointment_list")
+        else:
+            messages.error(request, "Invalid username or password. Deletion cancelled.")
+
+    return render(
+        request,
+        "auth/delete_appointment.html",
+        {
+            "delete_mode": True,
+            "object": appointment,
+            "cancel_url": reverse("appointment_list"),
+        },
+    )
 
 
 
@@ -81,6 +206,8 @@ def doctor_list(request):
     doctors = Doctor.objects.all()
     return render(request, 'doctors/list.html', {'doctors': doctors})
 
+
+
 def doctor_create(request):
     if request.method == 'POST':
         form = DoctorForm(request.POST)
@@ -90,7 +217,9 @@ def doctor_create(request):
             return redirect('doctor_list')
     else:
         form = DoctorForm()
+
     return render(request, 'doctors/create.html', {'form': form})
+
 
 def doctor_update(request, id):
     doctor = get_object_or_404(Doctor, id=id)
