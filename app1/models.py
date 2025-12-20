@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Patient(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='patient_profile')
+    
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=15)
@@ -27,7 +27,7 @@ class Doctor(models.Model):
         ('SUR', 'Surgeon'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile')
+   
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     specialty = models.CharField(max_length=10, choices=SPECIALTY_CHOICES)
@@ -129,7 +129,7 @@ class Staff(models.Model):
         ('ADMIN', 'Administrator'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='staff_profile')
+    
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
